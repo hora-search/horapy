@@ -1,5 +1,4 @@
 use numpy::{IntoPyArray, PyArray1, PyReadonlyArray1};
-use pyo3::conversion::FromPyObject;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
 use real_hora::core::ann_index::ANNIndex;
@@ -8,15 +7,9 @@ use real_hora::core::arguments;
 use real_hora::core::metrics;
 use real_hora::core::node;
 
-pub fn metrics_transform(s: &str) -> metrics::Metric {
-    match s {
-        "angular" => metrics::Metric::Angular,
-        "manhattan" => metrics::Metric::Manhattan,
-        "dot_product" => metrics::Metric::DotProduct,
-        "euclidean" => metrics::Metric::Euclidean,
-        "cosine_similarity" => metrics::Metric::CosineSimilarity,
-        _ => metrics::Metric::Unknown,
-    }
+pub enum DIdxType {
+    String,
+    Int64,
 }
 
 #[pyclass]
@@ -27,18 +20,39 @@ struct ANNNode {
     idx: usize, // data id, it can be any type;
 }
 
+fn transform_didx_type(src: &str) -> DIdxType {
+    match src {
+        "int" => DIdxType::Int64,
+        "string" => DIdxType::String,
+        _ => DIdxType::Int64,
+    }
+}
+
 fn transform(src: &[(node::Node<f32, usize>, f32)]) -> Vec<(ANNNode, f32)> {
     let dst: Vec<(ANNNode, f32)> = src
         .iter()
-        .map(
-            |i| (ANNNode {
-                vectors: i.0.vectors().clone(),
-                idx: *i.0.idx().as_ref().unwrap(),
-            },
-            i.1)
-        )
+        .map(|i| {
+            (
+                ANNNode {
+                    vectors: i.0.vectors().clone(),
+                    idx: *i.0.idx().as_ref().unwrap(),
+                },
+                i.1,
+            )
+        })
         .collect();
     dst
+}
+
+fn metrics_transform(s: &str) -> metrics::Metric {
+    match s {
+        "angular" => metrics::Metric::Angular,
+        "manhattan" => metrics::Metric::Manhattan,
+        "dot_product" => metrics::Metric::DotProduct,
+        "euclidean" => metrics::Metric::Euclidean,
+        "cosine_similarity" => metrics::Metric::CosineSimilarity,
+        _ => metrics::Metric::Unknown,
+    }
 }
 
 #[macro_export]
@@ -167,10 +181,12 @@ impl BPTIndex {
     #[new]
     fn new(dimension: usize, tree_num: i32, candidate_size: i32) -> Self {
         BPTIndex {
-            _idx: Box::new(real_hora::index::rpt_idx::BPTIndex::<
-                f32,
-                usize,
-            >::new(dimension, real_hora::index::rpt_params::BPTParams::default().tree_num(tree_num).candidate_size(candidate_size))),
+            _idx: Box::new(real_hora::index::rpt_idx::BPTIndex::<f32, usize>::new(
+                dimension,
+                real_hora::index::rpt_params::BPTParams::default()
+                    .tree_num(tree_num)
+                    .candidate_size(candidate_size),
+            )),
         }
     }
 }
