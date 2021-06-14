@@ -89,7 +89,7 @@ macro_rules! inherit_ann_index_method {
 
         #[pymethods]
         impl $ann_idx {
-            fn construct(&mut self, py: Python, s: String) -> PyResult<bool> {
+            fn build(&mut self, py: Python, s: String) -> PyResult<bool> {
                 py.allow_threads(|| self._idx.build(metrics_transform(&s)).unwrap());
                 Ok(true)
             }
@@ -293,7 +293,7 @@ impl SSGIndex {
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn fastann(_py: Python, m: &PyModule) -> PyResult<()> {
+fn hora(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<BruteForceIndex>()?;
     m.add_class::<BPTIndex>()?;
     m.add_class::<HNSWIndex>()?;
