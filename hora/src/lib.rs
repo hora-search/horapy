@@ -170,7 +170,7 @@ impl BruteForceIndex {
                 usize,
             >::new(
                 dimension,
-                real_hora::index::bruteforce_params::BruteForceParams::default(),
+                &real_hora::index::bruteforce_params::BruteForceParams::default(),
             )),
         }
     }

@@ -31,7 +31,7 @@ name = "hora"
 crate-type = ["cdylib"]
 
 [dependencies]
-real_hora = { package = "hora", path = "../../hora"}
+real_hora = { package = "hora", path = "../../hora", features=["simd"]}
 # fa = { package = "fastann", path = "../../fastann"}
 numpy = "0.13"
 
