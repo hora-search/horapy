@@ -7,7 +7,7 @@ from .hora import SSGIndex as HoraSSGIndex
 from .hora import IVFPQIndex as HoraIVFPQIndex
 
 
-class ANNIndex():
+class HoraANNIndex():
     def __init__(self, dimension, dtype):
         self.ann_idx = None
         self.dtype = dtype
@@ -15,7 +15,7 @@ class ANNIndex():
         self.dimension = dimension
 
     def __str__(self):
-        return "ANNIndex <{}>".format(self.name())
+        return "Hora ANNIndex <{}>".format(self.name())
 
     def build(self, metrics=""):
         self.ann_idx.build(metrics)
@@ -40,21 +40,21 @@ class ANNIndex():
         self.ann_idx.dump(path)
 
 
-class BruteForceIndex(ANNIndex):
+class BruteForceIndex(HoraANNIndex):
     def __init__(self, dimension, dtype):
         super().__init__(dimension, dtype)
         self.ann_type = HoraBruteForceIndex
         self.ann_idx = HoraBruteForceIndex(dimension)
 
 
-class BPTIndex(ANNIndex):
-    def __init__(self, dimension, tree_num, candidate_size, dtype):
-        super().__init__(dimension, dtype)
-        self.ann_type = HoraBPTIndex
-        self.ann_idx = HoraBPTIndex(dimension, tree_num, candidate_size)
+# class BPTIndex(ANNIndex):
+#     def __init__(self, dimension, tree_num, candidate_size, dtype):
+#         super().__init__(dimension, dtype)
+#         self.ann_type = HoraBPTIndex
+#         self.ann_idx = HoraBPTIndex(dimension, tree_num, candidate_size)
 
 
-class HNSWIndex(ANNIndex):
+class HNSWIndex(HoraANNIndex):
     def __init__(self, dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion, dtype):
         super().__init__(dimension, dtype)
         self.ann_type = HoraHNSWIndex
@@ -62,14 +62,14 @@ class HNSWIndex(ANNIndex):
             dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion)
 
 
-class PQIndex(ANNIndex):
+class PQIndex(HoraANNIndex):
     def __init__(self, dimension, n_sub, sub_bits, train_epoch, dtype):
         super().__init__(dimension, dtype)
         self.ann_type = HoraPQIndex
         self.ann_idx = HoraPQIndex(dimension, n_sub, sub_bits, train_epoch)
 
 
-class SSGIndex(ANNIndex):
+class SSGIndex(HoraANNIndex):
     def __init__(self, dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size, dtype):
         super().__init__(dimension, dtype)
         self.ann_type = HoraSSGIndex
@@ -77,7 +77,7 @@ class SSGIndex(ANNIndex):
             dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size)
 
 
-class IVFPQIndex(ANNIndex):
+class IVFPQIndex(HoraANNIndex):
     def __init__(self, dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch, dtype):
         super().__init__(dimension, dtype)
         self.ann_type = HoraIVFPQIndex

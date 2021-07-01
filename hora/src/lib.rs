@@ -3,7 +3,6 @@ use pyo3::prelude::*;
 use pyo3::types::PyList;
 use real_hora::core::ann_index::ANNIndex;
 use real_hora::core::ann_index::SerializableIndex;
-use real_hora::core::arguments;
 use real_hora::core::metrics;
 use real_hora::core::node;
 
@@ -75,11 +74,7 @@ macro_rules! inherit_ann_index_method {
                 item: &node::Node<f32, usize>,
                 k: usize,
             ) -> PyResult<Vec<(ANNNode, f32)>> {
-                Ok(transform(&self._idx.node_search_k(
-                    item,
-                    k,
-                    &arguments::Args::new(),
-                ))) //TODO: wrap argument
+                Ok(transform(&self._idx.node_search_k(item, k))) //TODO: wrap argument
             }
 
             fn node_search_k_ids(&self, item: &[f32], k: usize) -> PyResult<Vec<usize>> {
@@ -142,19 +137,19 @@ macro_rules! inherit_ann_index_method {
             #[staticmethod]
             fn load(path: String) -> Self {
                 $ann_idx {
-                    _idx: Box::new(<$type_expr>::load(&path, &arguments::Args::new()).unwrap()),
+                    _idx: Box::new(<$type_expr>::load(&path).unwrap()),
                 }
             }
 
             fn dump(&mut self, path: String) {
-                self._idx.dump(&path, &arguments::Args::new()).unwrap();
+                self._idx.dump(&path).unwrap();
             }
         }
     };
 }
 
 inherit_ann_index_method!(BruteForceIndex, real_hora::index::bruteforce_idx::BruteForceIndex<f32,usize>);
-inherit_ann_index_method!(BPTIndex, real_hora::index::rpt_idx::BPTIndex<f32, usize>);
+// inherit_ann_index_method!(BPTIndex, real_hora::index::rpt_idx::BPTIndex<f32, usize>);
 inherit_ann_index_method!(HNSWIndex, real_hora::index::hnsw_idx::HNSWIndex<f32, usize>);
 inherit_ann_index_method!(PQIndex, real_hora::index::pq_idx::PQIndex<f32, usize>);
 inherit_ann_index_method!(IVFPQIndex, real_hora::index::pq_idx::IVFPQIndex<f32, usize>);
@@ -176,20 +171,20 @@ impl BruteForceIndex {
     }
 }
 
-#[pymethods]
-impl BPTIndex {
-    #[new]
-    fn new(dimension: usize, tree_num: i32, candidate_size: i32) -> Self {
-        BPTIndex {
-            _idx: Box::new(real_hora::index::rpt_idx::BPTIndex::<f32, usize>::new(
-                dimension,
-                real_hora::index::rpt_params::BPTParams::default()
-                    .tree_num(tree_num)
-                    .candidate_size(candidate_size),
-            )),
-        }
-    }
-}
+// #[pymethods]
+// impl BPTIndex {
+//     #[new]
+//     fn new(dimension: usize, tree_num: i32, candidate_size: i32) -> Self {
+//         BPTIndex {
+//             _idx: Box::new(real_hora::index::bpt_idx::BPTIndex::<f32, usize>::new(
+//                 dimension,
+//                 real_hora::index::bpt_params::BPTParams::default()
+//                     .tree_num(tree_num)
+//                     .candidate_size(candidate_size),
+//             )),
+//         }
+//     }
+// }
 
 #[pymethods]
 impl HNSWIndex {
@@ -295,7 +290,7 @@ impl SSGIndex {
 #[pymodule]
 fn hora(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<BruteForceIndex>()?;
-    m.add_class::<BPTIndex>()?;
+    // m.add_class::<BPTIndex>()?;
     m.add_class::<HNSWIndex>()?;
     m.add_class::<PQIndex>()?;
     m.add_class::<SSGIndex>()?;
