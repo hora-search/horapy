@@ -131,3 +131,6 @@ hora/target/
 hora/Cargo.lock
 hora/**/*.rs.bk
 hora/target
+target/
+Cargo.lock
+**/*.rs.bk

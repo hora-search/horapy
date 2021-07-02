@@ -6,9 +6,10 @@ use real_hora::core::ann_index::SerializableIndex;
 use real_hora::core::metrics;
 use real_hora::core::node;
 
-pub enum DIdxType {
+pub enum KIdxType {
     String,
     Int64,
+    Int32,
 }
 
 #[pyclass]
@@ -19,11 +20,12 @@ struct ANNNode {
     idx: usize, // data id, it can be any type;
 }
 
-fn transform_didx_type(src: &str) -> DIdxType {
+fn transform_didx_type(src: &str) -> KIdxType {
     match src {
-        "int" => DIdxType::Int64,
-        "string" => DIdxType::String,
-        _ => DIdxType::Int64,
+        "int64" => KIdxType::Int64,
+        "int32" => KIdxType::Int32,
+        "string" => KIdxType::String,
+        _ => KIdxType::Int64,
     }
 }
 
@@ -148,8 +150,8 @@ macro_rules! inherit_ann_index_method {
     };
 }
 
-inherit_ann_index_method!(BruteForceIndex, real_hora::index::bruteforce_idx::BruteForceIndex<f32,usize>);
 // inherit_ann_index_method!(BPTIndex, real_hora::index::rpt_idx::BPTIndex<f32, usize>);
+inherit_ann_index_method!(BruteForceIndex, real_hora::index::bruteforce_idx::BruteForceIndex<f32,usize>);
 inherit_ann_index_method!(HNSWIndex, real_hora::index::hnsw_idx::HNSWIndex<f32, usize>);
 inherit_ann_index_method!(PQIndex, real_hora::index::pq_idx::PQIndex<f32, usize>);
 inherit_ann_index_method!(IVFPQIndex, real_hora::index::pq_idx::IVFPQIndex<f32, usize>);

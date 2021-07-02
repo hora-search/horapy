@@ -1,6 +1,6 @@
 import numpy
 from .hora import BruteForceIndex as HoraBruteForceIndex
-from .hora import BPTIndex as HoraBPTIndex
+# from .hora import BPTIndex as HoraBPTIndex
 from .hora import HNSWIndex as HoraHNSWIndex
 from .hora import PQIndex as HoraPQIndex
 from .hora import SSGIndex as HoraSSGIndex
