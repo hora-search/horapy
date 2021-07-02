@@ -19,14 +19,6 @@ struct ANNNode {
     idx: usize, // data id, it can be any type;
 }
 
-fn transform_didx_type(src: &str) -> KIdxType {
-    match src {
-        "usize" => KIdxType::Usize,
-        "string" => KIdxType::String,
-        _ => KIdxType::Usize,
-    }
-}
-
 // fn transform(src: &[(node::Node<f32, usize>, f32)]) -> Vec<(ANNNode, f32)> {
 //     let dst: Vec<(ANNNode, f32)> = src
 //         .iter()
@@ -303,13 +295,6 @@ macro_rules! define_ssg_ann_index {
         #[pymethods]
         impl $idx_name {
             #[new]
-            #[args(
-                neighbor_neighbor_size = "100",
-                init_k = "100",
-                index_size = "100",
-                angle = "30.0",
-                root_size = "30"
-            )]
             fn new(
                 dimension: usize,
                 neighbor_neighbor_size: usize,

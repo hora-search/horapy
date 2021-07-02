@@ -13,6 +13,12 @@ from .hora import IVFPQIndexStr as HoraIVFPQIndexStr
 
 
 class HoraANNIndex():
+    """Hora Index Base Class
+
+    Attributes:
+        dimension: your index dimension
+        dtype: the index type, only two option `usize` and `str`
+    """
     def __init__(self, dimension, dtype):
         self.ann_idx = None
         self.dtype = dtype
@@ -22,18 +28,27 @@ class HoraANNIndex():
     def __str__(self):
         return "Hora ANNIndex <{}>".format(self.name())
 
+    def __repr__(self):
+        return "Hora ANNIndex <{}>".format(self.name())
+
     def build(self, metrics=""):
         self.ann_idx.build(metrics)
 
     def add(self, vs, idx=None):
         if isinstance(vs, list):
             self.ann_idx.add(vs, idx)
+        elif isinstance(vs, numpy.ndarray):
+            self.ann_idx.add(vs.tolist(), idx)
+        else:
+            raise TypeError("invalid type {}".format(type(vs)))
 
     def search(self, vs, k):
         if isinstance(vs, numpy.ndarray):
-            return self.ann_idx.search_np(vs, k)
+            return self.ann_idx.search_np(vs.astype("float32"), k)
         elif isinstance(vs, list):
             return self.ann_idx.search_k(vs, k)
+        else:
+            raise TypeError("invalid type {}".format(type(vs)))
 
     def name(self):
         return self.ann_idx.name()
@@ -50,12 +65,11 @@ class BruteForceIndex(HoraANNIndex):
         super().__init__(dimension, dtype)
         if dtype == "usize":
             self.ann_type = HoraBruteForceIndexUsize
-            self.ann_idx = HoraBruteForceIndexUsize(dimension)
         elif dtype == "str":
             self.ann_type = HoraBruteForceIndexStr
-            self.ann_idx = HoraBruteForceIndexStr(dimension)
         else:
             raise ValueError("invalid dtype {}".format(dtype))
+        self.ann_idx = self.ann_type(dimension)
 
 
 # class BPTIndex(ANNIndex):
@@ -66,63 +80,53 @@ class BruteForceIndex(HoraANNIndex):
 
 
 class HNSWIndex(HoraANNIndex):
-    def __init__(self, dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion, dtype):
+    def __init__(self, dimension, dtype, max_item=1000000, n_neigh=32, n_neigh0=64, ef_build=20, ef_search=500, has_deletion=16):
         super().__init__(dimension, dtype)
         if dtype == "usize":
             self.ann_type = HoraHNSWIndexUsize
-            self.ann_idx = HoraHNSWIndexUsize(
-                dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion)
         elif dtype == "str":
             self.ann_type = HoraHNSWIndexStr
-            self.ann_idx = HoraHNSWIndexUsize(
-                dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion)
         else:
             raise ValueError("invalid dtype {}".format(dtype))
+
+        self.ann_idx = self.ann_type(
+            dimension, max_item, n_neigh, n_neigh0, ef_build, ef_search, has_deletion)
 
 
 class PQIndex(HoraANNIndex):
-    def __init__(self, dimension, n_sub, sub_bits, train_epoch, dtype):
+    def __init__(self, dimension, dtype, n_sub=4, sub_bits=4, train_epoch=100):
         super().__init__(dimension, dtype)
         if dtype == "usize":
             self.ann_type = HoraPQIndexUsize
-            self.ann_idx = HoraPQIndexUsize(
-                dimension, n_sub, sub_bits, train_epoch)
         elif dtype == "str":
             self.ann_type = HoraPQIndexStr
-            self.ann_idx = HoraPQIndexStr(
-                dimension, n_sub, sub_bits, train_epoch)
         else:
-            raise ValueError("invalid dtype {}".format(dtype))
+            raise TypeError("invalid dtype {}".format(dtype))
+        self.ann_idx = self.ann_type(
+            dimension, n_sub, sub_bits, train_epoch)
 
 
 class SSGIndex(HoraANNIndex):
-    def __init__(self, dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size, dtype):
+    def __init__(self, dimension, dtype, neighbor_neighbor_size=100, init_k=100, index_size=100, angle=60.0, root_size=100):
         super().__init__(dimension, dtype)
         if dtype == "usize":
             self.ann_type = HoraSSGIndexUsize
-            self.ann_idx = HoraSSGIndexUsize(
-                dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size)
         elif dtype == "str":
             self.ann_type = HoraSSGIndexStr
-            self.ann_idx = HoraSSGIndexStr(
-                dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size)
         else:
-            raise ValueError("invalid dtype {}".format(dtype))
+            raise TypeError("invalid dtype {}".format(dtype))
+        self.ann_idx = self.ann_type(
+            dimension, neighbor_neighbor_size, init_k, index_size, angle, root_size)
 
 
 class IVFPQIndex(HoraANNIndex):
-    def __init__(self, dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch, dtype):
+    def __init__(self, dimension, dtype, n_sub=25, sub_bits=4, n_kmeans_center=256, search_n_center=8, train_epoch=100):
         super().__init__(dimension, dtype)
-        self.ann_type = HoraIVFPQIndex
-        self.ann_idx = HoraIVFPQIndex(
-            dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch)
         if dtype == "usize":
             self.ann_type = HoraIVFPQIndexUsize
-            self.ann_idx = HoraIVFPQIndexUsize(
-                dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch)
         elif dtype == "str":
             self.ann_type = HoraIVFPQIndexStr
-            self.ann_idx = HoraIVFPQIndexStr(
-                dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch)
         else:
-            raise ValueError("invalid dtype {}".format(dtype))
+            raise TypeError("invalid dtype {}".format(dtype))
+        self.ann_idx = self.ann_type(
+            dimension, n_sub, sub_bits, n_kmeans_center, search_n_center, train_epoch)
