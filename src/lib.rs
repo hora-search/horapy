@@ -1,4 +1,4 @@
-use numpy::{IntoPyArray, PyArray1, PyReadonlyArray1};
+use numpy::{PyReadonlyArray1};
 use pyo3::prelude::*;
 use pyo3::types::PyList;
 use real_hora::core::ann_index::ANNIndex;
