@@ -19,6 +19,7 @@ class HoraANNIndex():
         dimension: your index dimension
         dtype: the index type, only two option `usize` and `str`
     """
+
     def __init__(self, dimension, dtype):
         self.ann_idx = None
         self.dtype = dtype
@@ -46,7 +47,7 @@ class HoraANNIndex():
         if isinstance(vs, numpy.ndarray):
             return self.ann_idx.search_np(vs.astype("float32"), k)
         elif isinstance(vs, list):
-            return self.ann_idx.search_k(vs, k)
+            return self.ann_idx.search(vs, k)
         else:
             raise TypeError("invalid type {}".format(type(vs)))
 
