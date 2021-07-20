@@ -109,7 +109,7 @@ class HNSWIndex(HoraANNIndex):
     the implementation of algorithm https://arxiv.org/abs/1603.09320
     """
 
-    def __init__(self, dimension, dtype, max_item=1000000, n_neigh=32, n_neigh0=64, ef_build=20, ef_search=500, has_deletion=16):
+    def __init__(self, dimension, dtype, max_item=1000000, n_neigh=32, n_neigh0=64, ef_build=20, ef_search=500, has_deletion=False):
         super().__init__(dimension, dtype)
         if dtype == "usize":
             self.ann_type = HoraHNSWIndexUsize
