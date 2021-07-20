@@ -1,0 +1,41 @@
+[package]
+name = "hora"
+version = "0.0.1"
+authors = ["aljun <gagasalamer@outlook.com>"]
+edition = "2018"
+
+[profile.dev]
+codegen-units = 4 
+debug = 1 # required for line numbers in tests, see tikv #5049
+debug-assertions = true 
+incremental = true 
+lto = false 
+opt-level = 0 
+overflow-checks = false 
+panic = 'unwind' 
+rpath = false 
+
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = "fat"
+opt-level = 3
+overflow-checks = false
+panic = 'unwind'
+rpath = false
+
+[lib]
+name = "hora"
+crate-type = ["cdylib"]
+
+[dependencies]
+real_hora = { package = "hora", path = "../hora", features=["simd"]}
+# fa = { package = "fastann", path = "../../fastann"}
+numpy = "0.13"
+
+[dependencies.pyo3]
+version = "0.13.2"
+features = ["extension-module"]
+
