@@ -1,39 +1,10 @@
-use numpy::{PyReadonlyArray1};
+use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
 use real_hora::core::ann_index::ANNIndex;
 use real_hora::core::ann_index::SerializableIndex;
 use real_hora::core::metrics;
 use real_hora::core::node;
-
-pub enum KIdxType {
-    String,
-    Usize,
-}
-
-#[pyclass]
-struct ANNNode {
-    #[pyo3(get)]
-    vectors: Vec<f32>, // the vectors;
-    #[pyo3(get)]
-    idx: usize, // data id, it can be any type;
-}
-
-// fn transform(src: &[(node::Node<f32, usize>, f32)]) -> Vec<(ANNNode, f32)> {
-//     let dst: Vec<(ANNNode, f32)> = src
-//         .iter()
-//         .map(|i| {
-//             (
-//                 ANNNode {
-//                     vectors: i.0.vectors().clone(),
-//                     idx: *i.0.idx().as_ref().unwrap(),
-//                 },
-//                 i.1,
-//             )
-//         })
-//         .collect();
-//     dst
-// }
 
 fn metrics_transform(s: &str) -> metrics::Metric {
     match s {
@@ -61,13 +32,6 @@ macro_rules! inherit_ann_index_method {
                     Err(_e) => Ok(false), //TODO
                 };
             }
-            // fn node_search_k(
-            //     &self,
-            //     item: &node::Node<f32, $idx_type_expr>,
-            //     k: usize,
-            // ) -> PyResult<Vec<(ANNNode, f32)>> {
-            //     Ok(transform(&self._idx.node_search_k(item, k))) //TODO: wrap argument
-            // }
 
             fn node_search_k_ids(&self, item: &[f32], k: usize) -> PyResult<Vec<$idx_type_expr>> {
                 Ok(self._idx.search(item, k))
@@ -81,44 +45,47 @@ macro_rules! inherit_ann_index_method {
                 Ok(true)
             }
             fn add_without_idx(&mut self, pyvs: &PyList) -> PyResult<bool> {
-                let mut vs = Vec::new();
-                for i in pyvs.iter() {
-                    vs.push(i.extract::<f32>().unwrap())
-                }
-                let n = node::Node::new(&vs);
-                self.add_node(&n)
+                self.add_node(&node::Node::new(
+                    &pyvs
+                        .iter()
+                        .map(|x| x.extract::<f32>().unwrap())
+                        .collect::<Vec<f32>>(),
+                ))
             }
             fn add(&mut self, pyvs: &PyList, idx: $idx_type_expr) -> PyResult<bool> {
-                let mut vs = Vec::new();
-                for i in pyvs.iter() {
-                    vs.push(i.extract::<f32>().unwrap())
-                }
-                let n = node::Node::new_with_idx(&vs, idx);
-                self.add_node(&n)
+                self.add_node(&node::Node::new_with_idx(
+                    &pyvs
+                        .iter()
+                        .map(|x| x.extract::<f32>().unwrap())
+                        .collect::<Vec<f32>>(),
+                    idx,
+                ))
             }
-
-            // fn search_k(&self, pyvs: &PyList, k: usize) -> PyResult<Vec<(ANNNode, f32)>> {
-            //     let mut vs = Vec::new();
-            //     for i in pyvs.iter() {
-            //         vs.push(i.extract::<f32>().unwrap())
-            //     }
-            //     let n = node::Node::new(&vs);
-            //     self.node_search_k(&n, k)
-            // }
 
             fn search_np<'py>(
                 &self,
                 pyvs: PyReadonlyArray1<'py, f32>,
                 k: usize,
             ) -> PyResult<Vec<$idx_type_expr>> {
-                let vs: Vec<f32> = pyvs.as_array().into_iter().map(|i| i.clone()).collect();
-                let res: Vec<$idx_type_expr> = self._idx.search(&vs, k);
+                let res: Vec<$idx_type_expr> = self._idx.search(
+                    &pyvs
+                        .as_array()
+                        .into_iter()
+                        .map(|i| i.clone())
+                        .collect::<Vec<f32>>(),
+                    k,
+                );
                 Ok(res)
             }
 
             fn search(&self, pyvs: &PyList, k: usize) -> PyResult<Vec<$idx_type_expr>> {
-                let vs: Vec<f32> = pyvs.iter().map(|i| i.extract::<f32>().unwrap()).collect();
-                self.node_search_k_ids(&vs, k)
+                self.node_search_k_ids(
+                    &pyvs
+                        .iter()
+                        .map(|i| i.extract::<f32>().unwrap())
+                        .collect::<Vec<f32>>(),
+                    k,
+                )
             }
 
             fn name(&self) -> PyResult<String> {
@@ -326,7 +293,6 @@ define_ssg_ann_index!(SSGIndexUsize, usize);
 inherit_ann_index_method!(SSGIndexStr, real_hora::index::ssg_idx::SSGIndex<f32, String>,String);
 define_ssg_ann_index!(SSGIndexStr, String);
 
-/// A Python module implemented in Rust.
 #[pymodule]
 fn hora(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<BruteForceIndexUsize>()?;
