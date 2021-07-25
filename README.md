@@ -5,6 +5,7 @@
 # horapy
 
 **[[Homepage](http://horasearch.com/)]** **[[Document](https://horasearch.com/doc)]** **[[Examples](https://horasearch.com/doc/example.html)]** **[[Hora](https://github.com/hora-search/hora)]** 
+
 Python bidding for the **`Hora Approximate Nearest Neighbor Search`**
 
 # Key Features
@@ -51,7 +52,7 @@ Python bidding for the **`Hora Approximate Nearest Neighbor Search`**
 
 by `aws t2.medium (CPU: Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz)` [more information](https://github.com/hora-search/ann-benchmarks)
 
-## Install
+## Installation
 
 ```bash
 pip install horapy
