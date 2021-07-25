@@ -1,7 +1,9 @@
 <div align="center">
   <img src="asset/logo.svg" width="70%"/>
 </div>
+
 # horapy
+
 **[[Homepage](http://horasearch.com/)]** **[[Document](https://horasearch.com/doc)]** **[[Examples](https://horasearch.com/doc/example.html)]** **[[Hora](https://github.com/hora-search/hora)]** 
 Python bidding for the **`Hora Approximate Nearest Neighbor Search`**
 
