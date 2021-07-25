@@ -1,10 +1,10 @@
-use numpy::PyReadonlyArray1;
-use pyo3::prelude::*;
-use pyo3::types::PyList;
 use hora::core::ann_index::ANNIndex;
 use hora::core::ann_index::SerializableIndex;
 use hora::core::metrics;
 use hora::core::node;
+use numpy::PyReadonlyArray1;
+use pyo3::prelude::*;
+use pyo3::types::PyList;
 
 fn metrics_transform(s: &str) -> metrics::Metric {
     match s {
@@ -200,15 +200,13 @@ macro_rules! define_pq_ann_index {
             #[new]
             fn new(dimension: usize, n_sub: usize, sub_bits: usize, train_epoch: usize) -> Self {
                 $idx_name {
-                    _idx: Box::new(
-                        hora::index::pq_idx::PQIndex::<f32, $idx_type_expr>::new(
-                            dimension,
-                            &hora::index::pq_params::PQParams::default()
-                                .n_sub(n_sub)
-                                .sub_bits(sub_bits)
-                                .train_epoch(train_epoch),
-                        ),
-                    ),
+                    _idx: Box::new(hora::index::pq_idx::PQIndex::<f32, $idx_type_expr>::new(
+                        dimension,
+                        &hora::index::pq_params::PQParams::default()
+                            .n_sub(n_sub)
+                            .sub_bits(sub_bits)
+                            .train_epoch(train_epoch),
+                    )),
                 }
             }
         }
@@ -234,17 +232,15 @@ macro_rules! define_ivfpq_ann_index {
                 train_epoch: usize,
             ) -> Self {
                 $idx_name {
-                    _idx: Box::new(
-                        hora::index::pq_idx::IVFPQIndex::<f32, $idx_type_expr>::new(
-                            dimension,
-                            &hora::index::pq_params::IVFPQParams::default()
-                                .n_sub(n_sub)
-                                .sub_bits(sub_bits)
-                                .n_kmeans_center(n_kmeans_center)
-                                .search_n_center(search_n_center)
-                                .train_epoch(train_epoch),
-                        ),
-                    ),
+                    _idx: Box::new(hora::index::pq_idx::IVFPQIndex::<f32, $idx_type_expr>::new(
+                        dimension,
+                        &hora::index::pq_params::IVFPQParams::default()
+                            .n_sub(n_sub)
+                            .sub_bits(sub_bits)
+                            .n_kmeans_center(n_kmeans_center)
+                            .search_n_center(search_n_center)
+                            .train_epoch(train_epoch),
+                    )),
                 }
             }
         }
@@ -271,17 +267,15 @@ macro_rules! define_ssg_ann_index {
                 root_size: usize,
             ) -> Self {
                 $idx_name {
-                    _idx: Box::new(
-                        hora::index::ssg_idx::SSGIndex::<f32, $idx_type_expr>::new(
-                            dimension,
-                            &hora::index::ssg_params::SSGParams::default()
-                                .neighbor_neighbor_size(neighbor_neighbor_size)
-                                .init_k(init_k)
-                                .index_size(index_size)
-                                .angle(angle)
-                                .root_size(root_size),
-                        ),
-                    ),
+                    _idx: Box::new(hora::index::ssg_idx::SSGIndex::<f32, $idx_type_expr>::new(
+                        dimension,
+                        &hora::index::ssg_params::SSGParams::default()
+                            .neighbor_neighbor_size(neighbor_neighbor_size)
+                            .init_k(init_k)
+                            .index_size(index_size)
+                            .angle(angle)
+                            .root_size(root_size),
+                    )),
                 }
             }
         }
