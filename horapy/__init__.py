@@ -1,15 +1,15 @@
 import numpy
-from .hora import BruteForceIndexUsize as HoraBruteForceIndexUsize
-from .hora import BruteForceIndexStr as HoraBruteForceIndexStr
-# from .hora import BPTIndex as HoraBPTIndex
-from .hora import HNSWIndexUsize as HoraHNSWIndexUsize
-from .hora import HNSWIndexStr as HoraHNSWIndexStr
-from .hora import PQIndexUsize as HoraPQIndexUsize
-from .hora import PQIndexStr as HoraPQIndexStr
-from .hora import SSGIndexUsize as HoraSSGIndexUsize
-from .hora import SSGIndexStr as HoraSSGIndexStr
-from .hora import IVFPQIndexUsize as HoraIVFPQIndexUsize
-from .hora import IVFPQIndexStr as HoraIVFPQIndexStr
+from .horapy import BruteForceIndexUsize as HoraBruteForceIndexUsize
+from .horapy import BruteForceIndexStr as HoraBruteForceIndexStr
+# from .horapy import BPTIndex as HoraBPTIndex
+from .horapy import HNSWIndexUsize as HoraHNSWIndexUsize
+from .horapy import HNSWIndexStr as HoraHNSWIndexStr
+from .horapy import PQIndexUsize as HoraPQIndexUsize
+from .horapy import PQIndexStr as HoraPQIndexStr
+from .horapy import SSGIndexUsize as HoraSSGIndexUsize
+from .horapy import SSGIndexStr as HoraSSGIndexStr
+from .horapy import IVFPQIndexUsize as HoraIVFPQIndexUsize
+from .horapy import IVFPQIndexStr as HoraIVFPQIndexStr
 
 
 class HoraANNIndex():

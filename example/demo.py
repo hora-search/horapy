@@ -1,5 +1,5 @@
 import numpy as np
-from hora import HNSWIndex
+from horapy import HNSWIndex
 
 dimension = 50
 n = 1000

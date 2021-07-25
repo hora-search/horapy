@@ -1,10 +1,10 @@
 use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
-use real_hora::core::ann_index::ANNIndex;
-use real_hora::core::ann_index::SerializableIndex;
-use real_hora::core::metrics;
-use real_hora::core::node;
+use hora::core::ann_index::ANNIndex;
+use hora::core::ann_index::SerializableIndex;
+use hora::core::metrics;
+use hora::core::node;
 
 fn metrics_transform(s: &str) -> metrics::Metric {
     match s {
@@ -106,12 +106,12 @@ macro_rules! inherit_ann_index_method {
     };
 }
 
-// inherit_ann_index_method!(BPTIndex, real_hora::index::rpt_idx::BPTIndex<f32, usize>);
-// inherit_ann_index_method!(BruteForceIndex, real_hora::index::bruteforce_idx::BruteForceIndex<f32,usize>, usize);
-// inherit_ann_index_method!(HNSWIndex, real_hora::index::hnsw_idx::HNSWIndex<f32, usize>,usize);
-// inherit_ann_index_method!(PQIndex, real_hora::index::pq_idx::PQIndex<f32, usize>,usize);
-// inherit_ann_index_method!(IVFPQIndex, real_hora::index::pq_idx::IVFPQIndex<f32, usize>,usize);
-// inherit_ann_index_method!(SSGIndex, real_hora::index::ssg_idx::SSGIndex<f32, usize>,usize);
+// inherit_ann_index_method!(BPTIndex, hora::index::rpt_idx::BPTIndex<f32, usize>);
+// inherit_ann_index_method!(BruteForceIndex, hora::index::bruteforce_idx::BruteForceIndex<f32,usize>, usize);
+// inherit_ann_index_method!(HNSWIndex, hora::index::hnsw_idx::HNSWIndex<f32, usize>,usize);
+// inherit_ann_index_method!(PQIndex, hora::index::pq_idx::PQIndex<f32, usize>,usize);
+// inherit_ann_index_method!(IVFPQIndex, hora::index::pq_idx::IVFPQIndex<f32, usize>,usize);
+// inherit_ann_index_method!(SSGIndex, hora::index::ssg_idx::SSGIndex<f32, usize>,usize);
 
 #[macro_export]
 macro_rules! define_bruteforce_ann_index {
@@ -121,21 +121,21 @@ macro_rules! define_bruteforce_ann_index {
             #[new]
             fn new(dimension: usize) -> Self {
                 $idx_name {
-                    _idx: Box::new(real_hora::index::bruteforce_idx::BruteForceIndex::<
+                    _idx: Box::new(hora::index::bruteforce_idx::BruteForceIndex::<
                         f32,
                         $idx_type_expr,
                     >::new(
                         dimension,
-                        &real_hora::index::bruteforce_params::BruteForceParams::default(),
+                        &hora::index::bruteforce_params::BruteForceParams::default(),
                     )),
                 }
             }
         }
     };
 }
-inherit_ann_index_method!(BruteForceIndexUsize, real_hora::index::bruteforce_idx::BruteForceIndex<f32,usize>, usize);
+inherit_ann_index_method!(BruteForceIndexUsize, hora::index::bruteforce_idx::BruteForceIndex<f32,usize>, usize);
 define_bruteforce_ann_index!(BruteForceIndexUsize, usize);
-inherit_ann_index_method!(BruteForceIndexStr, real_hora::index::bruteforce_idx::BruteForceIndex<f32,String>, String);
+inherit_ann_index_method!(BruteForceIndexStr, hora::index::bruteforce_idx::BruteForceIndex<f32,String>, String);
 define_bruteforce_ann_index!(BruteForceIndexStr, String);
 
 // #[pymethods]
@@ -143,9 +143,9 @@ define_bruteforce_ann_index!(BruteForceIndexStr, String);
 //     #[new]
 //     fn new(dimension: usize, tree_num: i32, candidate_size: i32) -> Self {
 //         BPTIndex {
-//             _idx: Box::new(real_hora::index::bpt_idx::BPTIndex::<f32, usize>::new(
+//             _idx: Box::new(hora::index::bpt_idx::BPTIndex::<f32, usize>::new(
 //                 dimension,
-//                 real_hora::index::bpt_params::BPTParams::default()
+//                 hora::index::bpt_params::BPTParams::default()
 //                     .tree_num(tree_num)
 //                     .candidate_size(candidate_size),
 //             )),
@@ -170,9 +170,9 @@ macro_rules! define_hnsw_ann_index {
             ) -> Self {
                 $idx_name {
                     _idx: Box::new(
-                        real_hora::index::hnsw_idx::HNSWIndex::<f32, $idx_type_expr>::new(
+                        hora::index::hnsw_idx::HNSWIndex::<f32, $idx_type_expr>::new(
                             dimension,
-                            &real_hora::index::hnsw_params::HNSWParams::<f32>::default()
+                            &hora::index::hnsw_params::HNSWParams::<f32>::default()
                                 .max_item(max_item)
                                 .n_neighbor(n_neigh)
                                 .n_neighbor0(n_neigh0)
@@ -187,9 +187,9 @@ macro_rules! define_hnsw_ann_index {
     };
 }
 
-inherit_ann_index_method!(HNSWIndexUsize, real_hora::index::hnsw_idx::HNSWIndex<f32, usize>,usize);
+inherit_ann_index_method!(HNSWIndexUsize, hora::index::hnsw_idx::HNSWIndex<f32, usize>,usize);
 define_hnsw_ann_index!(HNSWIndexUsize, usize);
-inherit_ann_index_method!(HNSWIndexStr, real_hora::index::hnsw_idx::HNSWIndex<f32, String>,String);
+inherit_ann_index_method!(HNSWIndexStr, hora::index::hnsw_idx::HNSWIndex<f32, String>,String);
 define_hnsw_ann_index!(HNSWIndexStr, String);
 
 #[macro_export]
@@ -201,9 +201,9 @@ macro_rules! define_pq_ann_index {
             fn new(dimension: usize, n_sub: usize, sub_bits: usize, train_epoch: usize) -> Self {
                 $idx_name {
                     _idx: Box::new(
-                        real_hora::index::pq_idx::PQIndex::<f32, $idx_type_expr>::new(
+                        hora::index::pq_idx::PQIndex::<f32, $idx_type_expr>::new(
                             dimension,
-                            &real_hora::index::pq_params::PQParams::default()
+                            &hora::index::pq_params::PQParams::default()
                                 .n_sub(n_sub)
                                 .sub_bits(sub_bits)
                                 .train_epoch(train_epoch),
@@ -214,9 +214,9 @@ macro_rules! define_pq_ann_index {
         }
     };
 }
-inherit_ann_index_method!(PQIndexUsize, real_hora::index::pq_idx::PQIndex<f32, usize>,usize);
+inherit_ann_index_method!(PQIndexUsize, hora::index::pq_idx::PQIndex<f32, usize>,usize);
 define_pq_ann_index!(PQIndexUsize, usize);
-inherit_ann_index_method!(PQIndexStr, real_hora::index::pq_idx::PQIndex<f32, String>,String);
+inherit_ann_index_method!(PQIndexStr, hora::index::pq_idx::PQIndex<f32, String>,String);
 define_pq_ann_index!(PQIndexStr, String);
 
 #[macro_export]
@@ -235,9 +235,9 @@ macro_rules! define_ivfpq_ann_index {
             ) -> Self {
                 $idx_name {
                     _idx: Box::new(
-                        real_hora::index::pq_idx::IVFPQIndex::<f32, $idx_type_expr>::new(
+                        hora::index::pq_idx::IVFPQIndex::<f32, $idx_type_expr>::new(
                             dimension,
-                            &real_hora::index::pq_params::IVFPQParams::default()
+                            &hora::index::pq_params::IVFPQParams::default()
                                 .n_sub(n_sub)
                                 .sub_bits(sub_bits)
                                 .n_kmeans_center(n_kmeans_center)
@@ -251,9 +251,9 @@ macro_rules! define_ivfpq_ann_index {
     };
 }
 
-inherit_ann_index_method!(IVFPQIndexUsize, real_hora::index::pq_idx::IVFPQIndex<f32, usize>,usize);
+inherit_ann_index_method!(IVFPQIndexUsize, hora::index::pq_idx::IVFPQIndex<f32, usize>,usize);
 define_ivfpq_ann_index!(IVFPQIndexUsize, usize);
-inherit_ann_index_method!(IVFPQIndexStr, real_hora::index::pq_idx::IVFPQIndex<f32, String>,String);
+inherit_ann_index_method!(IVFPQIndexStr, hora::index::pq_idx::IVFPQIndex<f32, String>,String);
 define_ivfpq_ann_index!(IVFPQIndexStr, String);
 
 #[macro_export]
@@ -272,9 +272,9 @@ macro_rules! define_ssg_ann_index {
             ) -> Self {
                 $idx_name {
                     _idx: Box::new(
-                        real_hora::index::ssg_idx::SSGIndex::<f32, $idx_type_expr>::new(
+                        hora::index::ssg_idx::SSGIndex::<f32, $idx_type_expr>::new(
                             dimension,
-                            &real_hora::index::ssg_params::SSGParams::default()
+                            &hora::index::ssg_params::SSGParams::default()
                                 .neighbor_neighbor_size(neighbor_neighbor_size)
                                 .init_k(init_k)
                                 .index_size(index_size)
@@ -288,13 +288,13 @@ macro_rules! define_ssg_ann_index {
     };
 }
 
-inherit_ann_index_method!(SSGIndexUsize, real_hora::index::ssg_idx::SSGIndex<f32, usize>,usize);
+inherit_ann_index_method!(SSGIndexUsize, hora::index::ssg_idx::SSGIndex<f32, usize>,usize);
 define_ssg_ann_index!(SSGIndexUsize, usize);
-inherit_ann_index_method!(SSGIndexStr, real_hora::index::ssg_idx::SSGIndex<f32, String>,String);
+inherit_ann_index_method!(SSGIndexStr, hora::index::ssg_idx::SSGIndex<f32, String>,String);
 define_ssg_ann_index!(SSGIndexStr, String);
 
 #[pymodule]
-fn hora(_py: Python, m: &PyModule) -> PyResult<()> {
+fn horapy(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<BruteForceIndexUsize>()?;
     m.add_class::<BruteForceIndexStr>()?;
     // m.add_class::<BPTIndex>()?;

@@ -2,7 +2,7 @@
 authors = ["aljun <gagasalamer@outlook.com>"]
 edition = "2018"
 license = "Apache-2.0"
-name = "hora"
+name = "horapy"
 version = "0.0.1"
 
 description = "Hora Search Everywhere"
@@ -37,11 +37,11 @@ rpath = false
 
 [lib]
 crate-type = ["cdylib"]
-name = "hora"
+name = "horapy"
 
 [dependencies]
 numpy = "0.14.1"
-real_hora = {package = "hora", version = "0.1.0", features = ["simd"]}
+hora = {version = "0.1.0", features = ["simd"]}
 
 [dependencies.pyo3]
 features = ["extension-module", "multiple-pymethods"]

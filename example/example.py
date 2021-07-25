@@ -1,4 +1,4 @@
-import hora
+import horapy
 import random
 from annoy import AnnoyIndex
 import random
@@ -7,12 +7,12 @@ from tqdm import tqdm
 
 def make_indices(dimensions):
     indices = []
-    indices.append(hora.BruteForceIndex(dimensions, "usize"))
-    indices.append(hora.HNSWIndex(dimensions,"usize"))
-    # indices.append(hora.PQIndex(dimensions,"usize"))
-    indices.append(hora.SSGIndex(
+    indices.append(horapy.BruteForceIndex(dimensions, "usize"))
+    indices.append(horapy.HNSWIndex(dimensions,"usize"))
+    # indices.append(horapy.PQIndex(dimensions,"usize"))
+    indices.append(horapy.SSGIndex(
         dimensions, "usize"))
-    # indices.append(hora.IVFPQIndex(dimensions,"usize"))
+    # indices.append(horapy.IVFPQIndex(dimensions,"usize"))
 
     return indices
 

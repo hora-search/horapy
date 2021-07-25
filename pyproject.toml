@@ -3,7 +3,7 @@ requires = ["maturin>=0.10,<0.11"]
 build-backend = "maturin"
 
 [project]
-name = "hora"
+name = "horapy"
 dependencies = ["numpy>=1.6.0"]
 classifiers = [
     "Programming Language :: Python",

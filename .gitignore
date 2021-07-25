@@ -127,10 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-hora/target/
-hora/Cargo.lock
-hora/**/*.rs.bk
-hora/target
+horapy/target/
+horapy/Cargo.lock
+horapy/**/*.rs.bk
+horapy/target
 target/
 Cargo.lock
 **/*.rs.bk
