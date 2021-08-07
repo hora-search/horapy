@@ -144,8 +144,8 @@ jobs:
         manylinux: auto
         args: -i python3.9 --release --out dist --no-sdist
     - uses: uraimo/run-on-arch-action@v2.0.5
-      # run-on-arch-action doesn't have ppc64 support
-      if: matrix.target != 'ppc64'
+      # only aarch64 has numpy wheel
+      if: ${{ matrix.target == 'aarch64' }}
       name: Install built wheel
       with:
         arch: ${{ matrix.target }}
