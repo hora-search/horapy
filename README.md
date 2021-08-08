@@ -6,7 +6,7 @@
 
 **[[Homepage](http://horasearch.com/)]** **[[Document](https://horasearch.com/doc)]** **[[Examples](https://horasearch.com/doc/example.html)]** **[[Hora](https://github.com/hora-search/hora)]** 
 
-Python bidding for the **`Hora Approximate Nearest Neighbor Search`**
+Python binding for the **`Hora Approximate Nearest Neighbor Search`**
 
 # Key Features
 
